@@ -10,7 +10,6 @@ namespace ToDoList.Models.Tests
  {
     public ItemTest()
     {
-      //Console.WriteLine("The port number and database name probably need to be changed");
       DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=3306;database=todo_test;";
     }
     
@@ -55,6 +54,66 @@ namespace ToDoList.Models.Tests
       Assert.AreEqual(testItem, foundItem);
       Assert.AreEqual(testItem.GetId(), foundItem.GetId());
       Assert.AreEqual(testItem.GetDescription(), foundItem.GetDescription());
+    }
+    
+    [TestMethod]
+    public void Remove_DeleteItemFromDatabase_Void()
+    {
+      //Arrange
+      List<Item> testList = new List<Item>();
+      Item testItem;
+      
+      testItem = new Item("Mow the lawn");
+      testItem.Save();
+      testList.Add(testItem);
+      
+      testItem = new Item("Blah blah");
+      testItem.Save();
+      testList.Add(testItem);
+      
+      testItem = new Item("Blah bloo");
+      testItem.Save();
+      testList.Add(testItem);
+      
+      testItem = new Item("Blah blee");
+      testItem.Save();
+      testList.Add(testItem);
+
+      //Act
+      Item.Remove(2);
+      testList.RemoveAt(1);
+
+      //Assert
+      CollectionAssert.AreEqual(testList, Item.GetAll());
+    }
+    
+    
+    [TestMethod]
+    public void GetInCategory_ReturnListOfItemsWithCategory_ListItems()
+    {
+      //Arrange
+      List<Item> testList = new List<Item>();
+      Item testItem;
+      
+      testItem = new Item("Mow the lawn", 2);
+      testItem.Save();
+      testList.Add(testItem);
+      
+      testItem = new Item("Blah blah", 2);
+      testItem.Save();
+      testList.Add(testItem);
+      
+      testItem = new Item("Blah bloo", 1);
+      testItem.Save();
+      //testList.Add(testItem);
+      
+      testItem = new Item("Blah blee", 2);
+      testItem.Save();
+      testList.Add(testItem);
+
+
+      //Assert
+      CollectionAssert.AreEqual(testList, Item.GetInCategory(2));
     }
   }
 }
